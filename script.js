@@ -14,15 +14,24 @@ function renderTasks() {
     li.className = `task-item ${task.completed ? "completed" : ""}`;
 
     li.innerHTML = `
-      <span>${task.text}</span>
-      <div class="task-actions">
-        <button class="btn-complete">${
-          task.completed ? "Batalkan" : "Selesai"
-        }</button>
-        <button class="btn-delete">Hapus</button>
-      </div>
-    `;
+  <span>${task.text}</span>
+  <div class="task-actions">
+    <button class="btn-complete">${task.completed ? "Batalkan" : "Selesai"}</button>
+    <button class="btn-edit">Edit</button>
+    <button class="btn-delete">Hapus</button>
+  </div>
+`;
 
+// Edit task
+li.querySelector(".btn-edit").addEventListener("click", () => {
+  const newText = prompt("Edit tugas:", task.text);
+  if (newText !== null && newText.trim() !== "") {
+    tasks[index].text = newText.trim();
+    saveTasks();
+    renderTasks();
+  }
+});
+    
     // Toggle completed status
     li.querySelector(".btn-complete").addEventListener("click", () => {
       tasks[index].completed = !tasks[index].completed;
