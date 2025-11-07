@@ -373,42 +373,49 @@ function clearCompleted() {
 
 // Check if app is running in standalone mode
 function isStandalone() {
-  return window.matchMedia('(display-mode: standalone)').matches || 
-         window.navigator.standalone === true ||
-         document.referrer.includes('android-app://');
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true ||
+    document.referrer.includes("android-app://")
+  );
 }
 
 // Enhanced local storage with sync capabilities
 function syncData() {
   // This function could be extended to sync with a backend
-  const lastSync = localStorage.getItem('lastSync');
+  const lastSync = localStorage.getItem("lastSync");
   const now = new Date().toISOString();
-  
-  console.log('Data sync check:', { lastSync, now });
-  localStorage.setItem('lastSync', now);
-  
+
+  console.log("Data sync check:", { lastSync, now });
+  localStorage.setItem("lastSync", now);
+
   // Could add cloud sync logic here
   return Promise.resolve();
 }
 
 // Background sync registration (when service worker supports it)
 function registerBackgroundSync() {
-  if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
-    navigator.serviceWorker.ready.then(registration => {
-      return registration.sync.register('background-sync');
-    }).catch(err => {
-      console.log('Background sync registration failed:', err);
-    });
+  if (
+    "serviceWorker" in navigator &&
+    "sync" in window.ServiceWorkerRegistration.prototype
+  ) {
+    navigator.serviceWorker.ready
+      .then((registration) => {
+        return registration.sync.register("background-sync");
+      })
+      .catch((err) => {
+        console.log("Background sync registration failed:", err);
+      });
   }
 }
 
 // Handle app visibility changes (for battery optimization)
 function handleVisibilityChange() {
   if (document.hidden) {
-    console.log('App is hidden - pausing non-essential operations');
+    console.log("App is hidden - pausing non-essential operations");
     // Could pause animations, reduce polling, etc.
   } else {
-    console.log('App is visible - resuming operations');
+    console.log("App is visible - resuming operations");
     // Resume operations, check for updates
     syncData();
   }
@@ -416,28 +423,28 @@ function handleVisibilityChange() {
 
 // Enhanced notification system for PWA
 function showPWANotification(title, options = {}) {
-  if ('Notification' in window && Notification.permission === 'granted') {
+  if ("Notification" in window && Notification.permission === "granted") {
     const notification = new Notification(title, {
-      icon: '/icons/icon-192x192.png',
-      badge: '/icons/icon-72x72.png',
-      ...options
+      icon: "/icons/icon-192x192.png",
+      badge: "/icons/icon-72x72.png",
+      ...options,
     });
-    
-    notification.onclick = function() {
+
+    notification.onclick = function () {
       window.focus();
       notification.close();
     };
-    
+
     return notification;
   }
 }
 
 // Request notification permission
 function requestNotificationPermission() {
-  if ('Notification' in window && Notification.permission === 'default') {
-    Notification.requestPermission().then(permission => {
-      if (permission === 'granted') {
-        showNotification('Notifications enabled! 🔔', 'success');
+  if ("Notification" in window && Notification.permission === "default") {
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        showNotification("Notifications enabled! 🔔", "success");
       }
     });
   }
@@ -445,13 +452,13 @@ function requestNotificationPermission() {
 
 // Add task reminder functionality
 function scheduleTaskReminder(task, minutes = 60) {
-  if ('Notification' in window && Notification.permission === 'granted') {
+  if ("Notification" in window && Notification.permission === "granted") {
     setTimeout(() => {
       if (!task.completed) {
         showPWANotification(`Reminder: ${task.text}`, {
-          body: 'Don\'t forget about this task!',
+          body: "Don't forget about this task!",
           tag: `reminder-${task.id}`,
-          requireInteraction: true
+          requireInteraction: true,
         });
       }
     }, minutes * 60 * 1000);
@@ -460,22 +467,25 @@ function scheduleTaskReminder(task, minutes = 60) {
 
 // Enhanced error handling and recovery
 function handleStorageError(error) {
-  console.error('Storage error:', error);
-  
-  if (error.name === 'QuotaExceededError') {
-    showNotification('Storage quota exceeded. Consider clearing completed tasks.', 'warning');
+  console.error("Storage error:", error);
+
+  if (error.name === "QuotaExceededError") {
+    showNotification(
+      "Storage quota exceeded. Consider clearing completed tasks.",
+      "warning"
+    );
     return false;
   }
-  
+
   // Try to recover from corruption
-  if (error.name === 'SyntaxError') {
-    console.log('Attempting to recover from corrupted data');
-    localStorage.removeItem('todoAppTasks');
+  if (error.name === "SyntaxError") {
+    console.log("Attempting to recover from corrupted data");
+    localStorage.removeItem("todoAppTasks");
     tasks = [];
-    showNotification('Data was corrupted and has been reset.', 'error');
+    showNotification("Data was corrupted and has been reset.", "error");
     return true;
   }
-  
+
   return false;
 }
 
@@ -484,11 +494,10 @@ function saveTasks() {
   try {
     const data = JSON.stringify(tasks);
     localStorage.setItem("todoAppTasks", data);
-    
+
     // Also save backup
     localStorage.setItem("todoAppTasks_backup", data);
     localStorage.setItem("todoAppTasks_timestamp", Date.now().toString());
-    
   } catch (error) {
     if (!handleStorageError(error)) {
       showNotification("Failed to save tasks", "error");
@@ -522,27 +531,27 @@ function loadTasks() {
 function setupPWALifecycle() {
   // Handle app installation
   if (isStandalone()) {
-    console.log('App is running in standalone mode');
-    document.body.classList.add('standalone');
+    console.log("App is running in standalone mode");
+    document.body.classList.add("standalone");
   }
-  
+
   // Handle visibility changes
-  document.addEventListener('visibilitychange', handleVisibilityChange);
-  
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+
   // Register for background sync
   registerBackgroundSync();
-  
+
   // Setup periodic sync (when supported)
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.then(registration => {
-      if ('periodicSync' in registration) {
-        registration.periodicSync.register('data-sync', {
-          minInterval: 24 * 60 * 60 * 1000 // 24 hours
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.ready.then((registration) => {
+      if ("periodicSync" in registration) {
+        registration.periodicSync.register("data-sync", {
+          minInterval: 24 * 60 * 60 * 1000, // 24 hours
         });
       }
     });
   }
-  
+
   // Auto-request notification permission after user interaction
   let hasInteracted = false;
   function handleFirstInteraction() {
@@ -551,15 +560,15 @@ function setupPWALifecycle() {
       setTimeout(() => {
         requestNotificationPermission();
       }, 2000);
-      
+
       // Remove listeners
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('keydown', handleFirstInteraction);
+      document.removeEventListener("click", handleFirstInteraction);
+      document.removeEventListener("keydown", handleFirstInteraction);
     }
   }
-  
-  document.addEventListener('click', handleFirstInteraction);
-  document.addEventListener('keydown', handleFirstInteraction);
+
+  document.addEventListener("click", handleFirstInteraction);
+  document.addEventListener("keydown", handleFirstInteraction);
 }
 
 // Initialize app when DOM is loaded
@@ -570,15 +579,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Handle online/offline events
-window.addEventListener('online', () => {
-  console.log('App is online');
+window.addEventListener("online", () => {
+  console.log("App is online");
   syncData();
-  showNotification('Back online! 🌐', 'success');
+  showNotification("Back online! 🌐", "success");
 });
 
-window.addEventListener('offline', () => {
-  console.log('App is offline');
-  showNotification('You\'re offline - changes will be saved locally 📴', 'info');
+window.addEventListener("offline", () => {
+  console.log("App is offline");
+  showNotification("You're offline - changes will be saved locally 📴", "info");
 });
 
 // Make functions globally available for onclick handlers
