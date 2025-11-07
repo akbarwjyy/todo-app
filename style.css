@@ -547,7 +547,11 @@ body {
 }
 
 .install-btn {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--primary-dark) 100%
+  );
   color: var(--white);
   border: none;
   border-radius: var(--radius-lg);
@@ -615,7 +619,7 @@ body {
     justify-content: center;
     padding: var(--spacing-lg);
   }
-  
+
   .offline-indicator {
     font-size: 0.8rem;
     padding: var(--spacing-xs);
@@ -627,23 +631,23 @@ body {
   .task-actions {
     opacity: 1;
   }
-  
+
   .task-btn {
     min-width: 44px;
     height: 44px;
     font-size: 1rem;
   }
-  
+
   .filter-btn {
     padding: var(--spacing-md) var(--spacing-lg);
     min-height: 44px;
   }
-  
+
   .add-btn {
     min-height: 48px;
     padding: var(--spacing-md) var(--spacing-xl);
   }
-  
+
   .task-checkbox {
     width: 32px;
     height: 32px;
@@ -665,7 +669,7 @@ body {
     padding-top: max(var(--spacing-lg), env(safe-area-inset-top));
     padding-bottom: max(var(--spacing-lg), env(safe-area-inset-bottom));
   }
-  
+
   .offline-indicator {
     padding-top: max(var(--spacing-sm), env(safe-area-inset-top));
   }
@@ -678,11 +682,11 @@ body {
     --gray-200: #c0c0c0;
     --gray-300: #a0a0a0;
   }
-  
+
   .task-item {
     border-width: 3px;
   }
-  
+
   .filter-btn {
     border-width: 3px;
   }
@@ -695,7 +699,7 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   .task-item {
     animation: none;
   }
@@ -716,21 +720,21 @@ body {
     --gray-900: #ffffff;
     --white: #111827;
   }
-  
+
   body {
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
   }
-  
+
   .main-content {
     background: var(--gray-100);
     border-color: var(--gray-200);
   }
-  
+
   .task-item {
     background: var(--gray-50);
     border-color: var(--gray-200);
   }
-  
+
   .task-item.completed {
     background: var(--gray-200);
   }
