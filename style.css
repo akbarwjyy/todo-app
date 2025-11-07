@@ -536,3 +536,202 @@ body {
     padding: var(--spacing-md);
   }
 }
+
+/* PWA Specific Styles */
+
+/* Install button */
+.install-container {
+  margin: var(--spacing-xl) 0;
+  text-align: center;
+  animation: slideIn 0.3s ease-out;
+}
+
+.install-btn {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  box-shadow: var(--shadow-lg);
+  font-family: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.install-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.install-btn:active {
+  transform: translateY(0);
+}
+
+.install-icon {
+  font-size: 1.25rem;
+}
+
+/* Offline indicator */
+.offline-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--warning-color);
+  color: var(--white);
+  padding: var(--spacing-sm);
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.875rem;
+  z-index: 1000;
+  transform: translateY(-100%);
+  transition: var(--transition-normal);
+  display: none;
+}
+
+.offline-indicator.show {
+  display: block;
+  transform: translateY(0);
+}
+
+/* PWA footer status */
+.pwa-status {
+  margin-top: var(--spacing-sm);
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+/* Enhanced mobile support for PWA */
+@media (max-width: 768px) {
+  .install-btn {
+    width: 100%;
+    justify-content: center;
+    padding: var(--spacing-lg);
+  }
+  
+  .offline-indicator {
+    font-size: 0.8rem;
+    padding: var(--spacing-xs);
+  }
+}
+
+/* Touch target improvements for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .task-actions {
+    opacity: 1;
+  }
+  
+  .task-btn {
+    min-width: 44px;
+    height: 44px;
+    font-size: 1rem;
+  }
+  
+  .filter-btn {
+    padding: var(--spacing-md) var(--spacing-lg);
+    min-height: 44px;
+  }
+  
+  .add-btn {
+    min-height: 48px;
+    padding: var(--spacing-md) var(--spacing-xl);
+  }
+  
+  .task-checkbox {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Prevent zoom on input focus for iOS */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .task-input {
+    font-size: 16px;
+  }
+}
+
+/* Safe area for devices with notches */
+@supports (padding: max(0px)) {
+  .app-container {
+    padding-left: max(var(--spacing-lg), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-lg), env(safe-area-inset-right));
+    padding-top: max(var(--spacing-lg), env(safe-area-inset-top));
+    padding-bottom: max(var(--spacing-lg), env(safe-area-inset-bottom));
+  }
+  
+  .offline-indicator {
+    padding-top: max(var(--spacing-sm), env(safe-area-inset-top));
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --gray-100: #e0e0e0;
+    --gray-200: #c0c0c0;
+    --gray-300: #a0a0a0;
+  }
+  
+  .task-item {
+    border-width: 3px;
+  }
+  
+  .filter-btn {
+    border-width: 3px;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .task-item {
+    animation: none;
+  }
+}
+
+/* Dark mode support (auto-detect) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --gray-50: #1f2937;
+    --gray-100: #374151;
+    --gray-200: #4b5563;
+    --gray-300: #6b7280;
+    --gray-400: #9ca3af;
+    --gray-500: #d1d5db;
+    --gray-600: #e5e7eb;
+    --gray-700: #f3f4f6;
+    --gray-800: #f9fafb;
+    --gray-900: #ffffff;
+    --white: #111827;
+  }
+  
+  body {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  }
+  
+  .main-content {
+    background: var(--gray-100);
+    border-color: var(--gray-200);
+  }
+  
+  .task-item {
+    background: var(--gray-50);
+    border-color: var(--gray-200);
+  }
+  
+  .task-item.completed {
+    background: var(--gray-200);
+  }
+}
