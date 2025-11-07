@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Icon Generator</title>
+  </head>
+  <body>
+    <h2>PWA Icon Generator</h2>
+    <p>
+      Use this page to generate icons for your PWA. Open in browser and click
+      generate.
+    </p>
+
+    <canvas id="canvas" style="border: 1px solid #ccc"></canvas><br /><br />
+    <button onclick="generateIcons()">Generate All Icons</button>
+
+    <div id="download-links"></div>
+
+    <script>
+      const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+
+      function generateIcons() {
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const downloadLinks = document.getElementById("download-links");
+        downloadLinks.innerHTML = "";
+
+        sizes.forEach((size) => {
+          canvas.width = size;
+          canvas.height = size;
+
+          // Create gradient
+          const gradient = ctx.createLinearGradient(0, 0, size, size);
+          gradient.addColorStop(0, "#667eea");
+          gradient.addColorStop(1, "#764ba2");
+
+          // Draw background circle
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(size / 2, size / 2, size / 2 - 4, 0, 2 * Math.PI);
+          ctx.fill();
+
+          // Draw white border
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 4;
+          ctx.stroke();
+
+          // Draw checkmark
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = size * 0.05;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+          ctx.beginPath();
+          ctx.moveTo(size * 0.35, size * 0.55);
+          ctx.lineTo(size * 0.45, size * 0.65);
+          ctx.lineTo(size * 0.66, size * 0.39);
+          ctx.stroke();
+
+          // Draw todo lines
+          ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+          ctx.fillRect(size * 0.31, size * 0.23, size * 0.16, size * 0.008);
+
+          ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+          ctx.fillRect(size * 0.31, size * 0.27, size * 0.23, size * 0.008);
+
+          ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+          ctx.fillRect(size * 0.31, size * 0.31, size * 0.2, size * 0.008);
+
+          ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+          ctx.fillRect(size * 0.31, size * 0.7, size * 0.18, size * 0.008);
+
+          ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+          ctx.fillRect(size * 0.31, size * 0.74, size * 0.21, size * 0.008);
+
+          // Create download link
+          canvas.toBlob(function (blob) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `icon-${size}x${size}.png`;
+            link.textContent = `Download ${size}x${size} icon`;
+            link.style.display = "block";
+            link.style.margin = "5px 0";
+            downloadLinks.appendChild(link);
+          });
+        });
+      }
+
+      // Auto generate on load
+      window.onload = function () {
+        generateIcons();
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+<!-- This is a placeholder SVG that can be converted to PNG icons -->
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#grad1)" stroke="#ffffff" stroke-width="8"/>
+  
+  <!-- Checkmark -->
+  <path d="M180 280 L230 330 L340 200" stroke="#ffffff" stroke-width="24" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Todo list lines -->
+  <rect x="160" y="120" width="80" height="4" fill="#ffffff" opacity="0.8" rx="2"/>
+  <rect x="160" y="140" width="120" height="4" fill="#ffffff" opacity="0.6" rx="2"/>
+  <rect x="160" y="160" width="100" height="4" fill="#ffffff" opacity="0.4" rx="2"/>
+  
+  <rect x="160" y="360" width="90" height="4" fill="#ffffff" opacity="0.6" rx="2"/>
+  <rect x="160" y="380" width="110" height="4" fill="#ffffff" opacity="0.4" rx="2"/>
+</svg>
