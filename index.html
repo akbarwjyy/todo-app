@@ -1,9 +1,49 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>Todo App - Organize Your Life</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="A modern, feature-rich todo application to organize your tasks and boost productivity" />
+    <meta name="theme-color" content="#667eea" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Todo App" />
+    <meta name="msapplication-TileColor" content="#667eea" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json" />
+    
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="icons/icon-192x192.svg" type="image/svg+xml" sizes="any" />
+    
+    <!-- Icons for different devices -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180x180.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="icons/icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="icons/icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="icons/icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="icons/icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="icons/icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="icons/icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="icons/icon-57x57.png" />
+    
+    <!-- Splash screens for iOS -->
+    <link rel="apple-touch-startup-image" href="icons/icon-512x512.png" />
+    
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-square70x70logo" content="icons/icon-72x72.png" />
+    <meta name="msapplication-square150x150logo" content="icons/icon-152x152.png" />
+    <meta name="msapplication-square310x310logo" content="icons/icon-384x384.png" />
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -71,13 +111,127 @@
             <p>Add your first task to get started!</p>
           </div>
         </div>
+        
+        <!-- PWA Install Button -->
+        <div class="install-container" id="install-container" style="display: none;">
+          <button class="install-btn" id="install-btn">
+            <span class="install-icon">📱</span>
+            <span>Install App</span>
+          </button>
+        </div>
       </main>
 
       <footer class="app-footer">
         <p>Built with ❤️ for productivity</p>
+        <div class="pwa-status">
+          <span id="pwa-status">Loading...</span>
+        </div>
       </footer>
     </div>
 
+    <!-- Offline indicator -->
+    <div class="offline-indicator" id="offline-indicator">
+      <span>📴 You're offline - changes will sync when reconnected</span>
+    </div>
+
+    <!-- Scripts -->
     <script src="script.js"></script>
+    <script>
+      // PWA Installation and Service Worker Registration
+      let deferredPrompt;
+      const installBtn = document.getElementById('install-btn');
+      const installContainer = document.getElementById('install-container');
+      const pwaStatus = document.getElementById('pwa-status');
+      const offlineIndicator = document.getElementById('offline-indicator');
+
+      // Register Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', async () => {
+          try {
+            const registration = await navigator.serviceWorker.register('/sw.js');
+            console.log('ServiceWorker registration successful:', registration);
+            pwaStatus.textContent = 'App ready for offline use';
+            
+            // Check for updates
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // New content is available, show update notification
+                  showUpdateNotification();
+                }
+              });
+            });
+            
+          } catch (error) {
+            console.error('ServiceWorker registration failed:', error);
+            pwaStatus.textContent = 'Offline mode unavailable';
+          }
+        });
+      } else {
+        pwaStatus.textContent = 'Offline mode not supported';
+      }
+
+      // Handle PWA installation
+      window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('PWA install prompt available');
+        e.preventDefault();
+        deferredPrompt = e;
+        installContainer.style.display = 'block';
+      });
+
+      installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          console.log(`User response to install prompt: ${outcome}`);
+          
+          if (outcome === 'accepted') {
+            installContainer.style.display = 'none';
+            showNotification('App installed successfully! 🎉', 'success');
+          }
+          
+          deferredPrompt = null;
+        }
+      });
+
+      // Handle app installation
+      window.addEventListener('appinstalled', () => {
+        console.log('PWA was installed');
+        installContainer.style.display = 'none';
+        showNotification('Welcome to Todo App! 🎉', 'success');
+      });
+
+      // Handle online/offline status
+      function updateOnlineStatus() {
+        if (navigator.onLine) {
+          offlineIndicator.style.display = 'none';
+          pwaStatus.textContent = 'Online - All features available';
+        } else {
+          offlineIndicator.style.display = 'block';
+          pwaStatus.textContent = 'Offline - Working locally';
+        }
+      }
+
+      window.addEventListener('online', updateOnlineStatus);
+      window.addEventListener('offline', updateOnlineStatus);
+      updateOnlineStatus();
+
+      // Show update notification
+      function showUpdateNotification() {
+        if (confirm('A new version is available! Reload to update?')) {
+          window.location.reload();
+        }
+      }
+
+      // Handle URL parameters for shortcuts
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('action') === 'new') {
+        // Focus on input for new task shortcut
+        setTimeout(() => {
+          document.getElementById('task-input').focus();
+        }, 500);
+      }
+    </script>
   </body>
 </html>
