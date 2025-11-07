@@ -3,24 +3,79 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>To-Do List</title>
+    <title>Todo App - Organize Your Life</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <div class="container">
-      <h1>To-Do List</h1>
+    <div class="app-container">
+      <header class="app-header">
+        <h1 class="app-title">
+          <span class="title-icon">✓</span>
+          Todo App
+        </h1>
+        <p class="app-subtitle">Organize your life, one task at a time</p>
+      </header>
 
-      <form id="task-form">
-        <input
-          type="text"
-          id="task-input"
-          placeholder="Tambah tugas baru..."
-          required
-        />
-        <button type="submit">Tambah</button>
-      </form>
+      <main class="main-content">
+        <div class="task-input-section">
+          <form id="task-form" class="task-form">
+            <div class="input-group">
+              <input
+                type="text"
+                id="task-input"
+                class="task-input"
+                placeholder="What needs to be done?"
+                required
+                autocomplete="off"
+              />
+              <button type="submit" class="add-btn">
+                <span class="btn-text">Add Task</span>
+                <span class="btn-icon">+</span>
+              </button>
+            </div>
+          </form>
+        </div>
 
-      <ul id="task-list"></ul>
+        <div class="task-stats">
+          <div class="stat-item">
+            <span class="stat-number" id="total-tasks">0</span>
+            <span class="stat-label">Total</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="pending-tasks">0</span>
+            <span class="stat-label">Pending</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="completed-tasks">0</span>
+            <span class="stat-label">Completed</span>
+          </div>
+        </div>
+
+        <div class="task-filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="pending">Pending</button>
+          <button class="filter-btn" data-filter="completed">Completed</button>
+        </div>
+
+        <div class="task-list-container">
+          <ul id="task-list" class="task-list"></ul>
+          <div class="empty-state" id="empty-state">
+            <div class="empty-icon">📝</div>
+            <h3>No tasks yet</h3>
+            <p>Add your first task to get started!</p>
+          </div>
+        </div>
+      </main>
+
+      <footer class="app-footer">
+        <p>Built with ❤️ for productivity</p>
+      </footer>
     </div>
 
     <script src="script.js"></script>
